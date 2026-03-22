@@ -1,0 +1,66 @@
+<div class="register-page">
+	<mat-card class="register-card">
+    <h1>Cadastro de Aluno</h1>
+    <p>Crie sua conta de aluno.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Primeiro nome</mat-label>
+        <input matInput formControlName="firstName" />
+        @if (firstName.invalid && firstName.touched) {
+          <mat-error>Primeiro nome é obrigatório.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Sobrenome</mat-label>
+        <input matInput formControlName="lastName" />
+        @if (lastName.invalid && lastName.touched) {
+          <mat-error>Sobrenome é obrigatório.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        @if (email.hasError('required') && email.touched) {
+          <mat-error>Email é obrigatório.</mat-error>
+        }
+        @if (email.hasError('email') && email.touched) {
+          <mat-error>Digite um endereço de email válido.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Senha</mat-label>
+        <input matInput type="password" formControlName="password" />
+        @if (password.hasError('required') && password.touched) {
+          <mat-error>Senha é obrigatória.</mat-error>
+        }
+        @if (password.hasError('minlength') && password.touched) {
+          <mat-error>A senha deve ter pelo menos 6 caracteres.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data de nascimento</mat-label>
+        <input matInput type="date" formControlName="birthDate" />
+        @if (birthDate.invalid && birthDate.touched) {
+          <mat-error>Data de nascimento é obrigatória.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="phone" />
+        @if (phone.invalid && phone.touched) {
+          <mat-error>Telefone é obrigatório.</mat-error>
+        }
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || isLoading">
+        {{ isLoading ? 'Cadastrando...' : 'Cadastrar' }}
+      </button>
+    </form>
+  </mat-card>
+</div>

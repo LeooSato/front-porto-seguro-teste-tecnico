@@ -1,0 +1,39 @@
+.register-page {
+	min-height: 100vh;
+	display: grid;
+	place-items: center;
+	padding: 24px;
+}
+
+.register-card {
+	width: 100%;
+	max-width: 520px;
+	padding: 24px;
+}
+
+h1 {
+	margin: 0;
+	font-size: 1.5rem;
+	font-weight: 600;
+}
+
+p {
+	margin-top: 6px;
+	margin-bottom: 20px;
+	color: rgba(0, 0, 0, 0.62);
+}
+
+form {
+	display: grid;
+	gap: 14px;
+}
+
+button {
+	margin-top: 8px;
+}
+
+@media (max-width: 599px) {
+	.register-card {
+		padding: 16px;
+	}
+}
