@@ -15,6 +15,7 @@ describe('TaskFormComponent', () => {
 
     fixture = TestBed.createComponent(TaskFormComponent);
     component = fixture.componentInstance;
+    component.enrollmentOptions = [{ id: 'enr-1', label: 'Angular Fundamentals' }];
     fixture.detectChanges();
   });
 
@@ -25,49 +26,53 @@ describe('TaskFormComponent', () => {
   it('should reject non-multiple of 30 time', () => {
     const emitSpy = spyOn(component.formSubmit, 'emit');
     component.form.setValue({
+      enrollmentId: 'enr-1',
       date: '2026-03-22',
       category: 'PESQUISA',
       description: 'Task description',
-      timeSpent: 45
+      timeSpentMinutes: 45
     });
 
     component.submit();
 
     expect(emitSpy).not.toHaveBeenCalled();
-    expect(component.timeSpent.hasError('multipleOf30')).toBeTrue();
+    expect(component.timeSpent.hasError('invalidTimeSpent')).toBeTrue();
   });
 
   it('should reject zero or negative time', () => {
     const emitSpy = spyOn(component.formSubmit, 'emit');
     component.form.setValue({
+      enrollmentId: 'enr-1',
       date: '2026-03-22',
       category: 'PESQUISA',
       description: 'Task description',
-      timeSpent: 0
+      timeSpentMinutes: 0
     });
 
     component.submit();
 
     expect(emitSpy).not.toHaveBeenCalled();
-    expect(component.timeSpent.hasError('min')).toBeTrue();
+    expect(component.timeSpent.hasError('invalidTimeSpent')).toBeTrue();
   });
 
   it('should submit valid payload', () => {
     const emitSpy = spyOn(component.formSubmit, 'emit');
     component.form.setValue({
+      enrollmentId: 'enr-1',
       date: '2026-03-22',
       category: 'PRATICA',
       description: '  Build feature  ',
-      timeSpent: 90
+      timeSpentMinutes: 90
     });
 
     component.submit();
 
     expect(emitSpy).toHaveBeenCalledWith({
+      enrollmentId: 'enr-1',
       date: '2026-03-22',
       category: 'PRATICA',
       description: 'Build feature',
-      timeSpent: 90
+      timeSpentMinutes: 90
     });
   });
 });

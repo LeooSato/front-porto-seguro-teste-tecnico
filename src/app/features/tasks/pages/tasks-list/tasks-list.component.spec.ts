@@ -17,7 +17,7 @@ describe('TasksListComponent', () => {
   let router: Router;
 
   beforeEach(async () => {
-    taskServiceSpy = jasmine.createSpyObj<TaskService>('TaskService', ['getAll', 'create', 'update', 'delete']);
+    taskServiceSpy = jasmine.createSpyObj<TaskService>('TaskService', ['getAll', 'getMyEnrollments', 'create', 'update', 'delete']);
     snackBarSpy = jasmine.createSpyObj<MatSnackBar>('MatSnackBar', ['open']);
 
     const authServiceStub: Pick<AuthService, 'currentUserSignal'> = {
@@ -32,11 +32,15 @@ describe('TasksListComponent', () => {
     taskServiceSpy.getAll.and.returnValue(of([
       {
         id: '1',
+        enrollmentId: 'enr-1',
         date: '2026-03-22',
         category: 'PESQUISA',
         description: 'Research topic',
         timeSpent: 60
       }
+    ]));
+    taskServiceSpy.getMyEnrollments.and.returnValue(of([
+      { id: 'enr-1', label: 'Angular Fundamentals' }
     ]));
 
     TestBed.overrideComponent(TasksListComponent, {
@@ -68,12 +72,14 @@ describe('TasksListComponent', () => {
 
   it('should load tasks for student on init', () => {
     expect(taskServiceSpy.getAll).toHaveBeenCalled();
+    expect(taskServiceSpy.getMyEnrollments).toHaveBeenCalled();
     expect(component.tasks.length).toBe(1);
   });
 
   it('should set selected task on edit', () => {
     const task = {
       id: '1',
+      enrollmentId: 'enr-1',
       date: '2026-03-22',
       category: 'PESQUISA' as const,
       description: 'Research topic',

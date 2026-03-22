@@ -2,6 +2,18 @@
 	<h2>{{ title }}</h2>
 
 	<mat-form-field appearance="outline">
+		<mat-label>Matricula</mat-label>
+		<mat-select formControlName="enrollmentId">
+			@for (item of enrollmentOptions; track item.id) {
+				<mat-option [value]="item.id">{{ item.label }}</mat-option>
+			}
+		</mat-select>
+		@if (enrollmentId.hasError('required') && enrollmentId.touched) {
+			<mat-error>Matricula e obrigatoria.</mat-error>
+		}
+	</mat-form-field>
+
+	<mat-form-field appearance="outline">
 		<mat-label>Data</mat-label>
 		<input matInput type="date" formControlName="date" />
 		@if (date.hasError('required') && date.touched) {
@@ -28,15 +40,12 @@
 
 	<mat-form-field appearance="outline">
 		<mat-label>Tempo gasto (minutos)</mat-label>
-		<input matInput type="number" min="1" step="30" formControlName="timeSpent" />
+		<input matInput type="number" min="1" step="30" formControlName="timeSpentMinutes" />
 		@if (timeSpent.hasError('required') && timeSpent.touched) {
 			<mat-error>Tempo e obrigatorio.</mat-error>
 		}
-		@if (timeSpent.hasError('min') && timeSpent.touched) {
-			<mat-error>Tempo deve ser maior que zero.</mat-error>
-		}
-		@if (timeSpent.hasError('multipleOf30') && timeSpent.touched) {
-			<mat-error>Tempo deve ser multiplo de 30 minutos.</mat-error>
+		@if (timeSpent.hasError('invalidTimeSpent') && timeSpent.touched) {
+			<mat-error>Time must be multiple of 30 minutes</mat-error>
 		}
 	</mat-form-field>
 

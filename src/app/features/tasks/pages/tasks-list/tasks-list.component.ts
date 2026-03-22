@@ -7,7 +7,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { finalize } from 'rxjs';
 
 import { AuthService } from '../../../../core/auth/auth.service';
-import { Task, TaskPayload } from '../../../../shared/models/task.model';
+import { EnrollmentOption, Task, TaskPayload } from '../../../../shared/models/task.model';
 import { TaskService } from '../../services/task.service';
 import { TaskFormComponent } from '../task-form/task-form.component';
 
@@ -32,6 +32,7 @@ export class TasksListComponent implements OnInit {
   readonly user = this.authService.currentUserSignal;
 
   tasks: Task[] = [];
+  enrollmentOptions: EnrollmentOption[] = [];
   isLoading = false;
   isSaving = false;
   selectedTask: Task | null = null;
@@ -58,6 +59,7 @@ export class TasksListComponent implements OnInit {
     }
 
     this.loadTasks();
+    this.loadEnrollments();
   }
 
   edit(task: Task): void {
@@ -132,6 +134,17 @@ export class TasksListComponent implements OnInit {
           });
         }
       });
+  }
+
+  private loadEnrollments(): void {
+    this.taskService.getMyEnrollments().subscribe({
+      next: (enrollments) => {
+        this.enrollmentOptions = enrollments;
+      },
+      error: () => {
+        this.enrollmentOptions = [];
+      }
+    });
   }
 
 }

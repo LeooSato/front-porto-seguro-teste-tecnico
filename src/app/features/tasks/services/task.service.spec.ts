@@ -11,6 +11,7 @@ describe('TaskService', () => {
   let httpMock: HttpTestingController;
 
   const tasksUrl = `${environment.apiUrl}/tasks`;
+  const enrollmentsMyUrl = `${environment.apiUrl}/enrollments/my`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -30,9 +31,21 @@ describe('TaskService', () => {
   });
 
   it('should list tasks', () => {
-    const tasks: Task[] = [
+    const tasksApi = [
       {
         id: '1',
+        enrollmentId: 'enr-1',
+        date: '2026-03-22',
+        category: 'PESQUISA',
+        description: 'Research JWT security',
+        timeSpentMinutes: 60
+      }
+    ];
+
+    const expected: Task[] = [
+      {
+        id: '1',
+        enrollmentId: 'enr-1',
         date: '2026-03-22',
         category: 'PESQUISA',
         description: 'Research JWT security',
@@ -41,25 +54,52 @@ describe('TaskService', () => {
     ];
 
     service.getAll().subscribe((response) => {
-      expect(response).toEqual(tasks);
+      expect(response).toEqual(expected);
     });
 
     const req = httpMock.expectOne(tasksUrl);
     expect(req.request.method).toBe('GET');
-    req.flush(tasks);
+    req.flush(tasksApi);
+  });
+
+  it('should list student enrollments', () => {
+    service.getMyEnrollments().subscribe((response) => {
+      expect(response).toEqual([
+        { id: 'enr-1', label: 'Angular Fundamentals' }
+      ]);
+    });
+
+    const req = httpMock.expectOne(enrollmentsMyUrl);
+    expect(req.request.method).toBe('GET');
+    req.flush([
+      {
+        id: 'enr-1',
+        courseName: 'Angular Fundamentals'
+      }
+    ]);
   });
 
   it('should create task', () => {
     const payload = {
+      enrollmentId: 'enr-1',
       date: '2026-03-22',
       category: 'PRATICA' as const,
       description: 'Hands-on API integration',
-      timeSpent: 90
+      timeSpentMinutes: 90
+    };
+
+    const createdApi = {
+      id: '2',
+      ...payload
     };
 
     const created: Task = {
       id: '2',
-      ...payload
+      enrollmentId: 'enr-1',
+      date: '2026-03-22',
+      category: 'PRATICA',
+      description: 'Hands-on API integration',
+      timeSpent: 90
     };
 
     service.create(payload).subscribe((response) => {
@@ -69,20 +109,30 @@ describe('TaskService', () => {
     const req = httpMock.expectOne(tasksUrl);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(payload);
-    req.flush(created);
+    req.flush(createdApi);
   });
 
   it('should update task', () => {
     const payload = {
+      enrollmentId: 'enr-1',
       date: '2026-03-22',
       category: 'ASSISTIR_VIDEOAULA' as const,
       description: 'Watch architecture class',
-      timeSpent: 120
+      timeSpentMinutes: 120
+    };
+
+    const updatedApi = {
+      id: '2',
+      ...payload
     };
 
     const updated: Task = {
       id: '2',
-      ...payload
+      enrollmentId: 'enr-1',
+      date: '2026-03-22',
+      category: 'ASSISTIR_VIDEOAULA',
+      description: 'Watch architecture class',
+      timeSpent: 120
     };
 
     service.update('2', payload).subscribe((response) => {
@@ -92,7 +142,7 @@ describe('TaskService', () => {
     const req = httpMock.expectOne(`${tasksUrl}/2`);
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual(payload);
-    req.flush(updated);
+    req.flush(updatedApi);
   });
 
   it('should delete task', () => {

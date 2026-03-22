@@ -6,15 +6,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 
-import { Task, TaskCategory, TaskPayload } from '../../../../shared/models/task.model';
+import { EnrollmentOption, Task, TaskCategory, TaskPayload } from '../../../../shared/models/task.model';
 
-const multipleOf30 = (control: AbstractControl<number | null>): ValidationErrors | null => {
-  const value = Number(control.value);
-  if (!value) {
+const validTimeSpent = (control: AbstractControl<number | null>): ValidationErrors | null => {
+  if (control.value === null || control.value === undefined) {
     return null;
   }
 
-  return value % 30 === 0 ? null : { multipleOf30: true };
+  const value = Number(control.value);
+
+  return value > 0 && value % 30 === 0 ? null : { invalidTimeSpent: true };
 };
 
 const trimRequired = (control: AbstractControl<string>): ValidationErrors | null => {
@@ -41,6 +42,7 @@ export class TaskFormComponent implements OnChanges {
   @Input() submitLabel = 'Salvar';
   @Input() isLoading = false;
   @Input() task: Task | null = null;
+  @Input() enrollmentOptions: EnrollmentOption[] = [];
 
   @Output() formSubmit = new EventEmitter<TaskPayload>();
   @Output() formCancel = new EventEmitter<void>();
@@ -48,11 +50,16 @@ export class TaskFormComponent implements OnChanges {
   readonly categories: TaskCategory[] = ['PESQUISA', 'PRATICA', 'ASSISTIR_VIDEOAULA'];
 
   readonly form = this.fb.nonNullable.group({
+    enrollmentId: ['', [Validators.required]],
     date: ['', [Validators.required]],
     category: this.fb.control<TaskCategory>('PESQUISA', { validators: [Validators.required], nonNullable: true }),
     description: ['', [Validators.required, trimRequired]],
-    timeSpent: this.fb.control<number | null>(null, [Validators.required, Validators.min(1), multipleOf30])
+    timeSpentMinutes: this.fb.control<number | null>(null, [Validators.required, validTimeSpent])
   });
+
+  get enrollmentId() {
+    return this.form.controls.enrollmentId;
+  }
 
   get date() {
     return this.form.controls.date;
@@ -67,16 +74,21 @@ export class TaskFormComponent implements OnChanges {
   }
 
   get timeSpent() {
-    return this.form.controls.timeSpent;
+    return this.form.controls.timeSpentMinutes;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['enrollmentOptions'] && !this.task && !this.enrollmentId.value && this.enrollmentOptions.length > 0) {
+      this.enrollmentId.setValue(this.enrollmentOptions[0].id);
+    }
+
     if (changes['task']) {
       this.form.reset({
+        enrollmentId: this.task?.enrollmentId ?? this.enrollmentOptions[0]?.id ?? '',
         date: this.task?.date ?? '',
         category: this.task?.category ?? 'PESQUISA',
         description: this.task?.description ?? '',
-        timeSpent: this.task?.timeSpent ?? null
+        timeSpentMinutes: this.task?.timeSpent ?? null
       });
     }
   }
@@ -90,10 +102,11 @@ export class TaskFormComponent implements OnChanges {
     const payload = this.form.getRawValue();
 
     this.formSubmit.emit({
+      enrollmentId: payload.enrollmentId,
       date: payload.date,
       category: payload.category,
       description: payload.description.trim(),
-      timeSpent: Number(payload.timeSpent)
+      timeSpentMinutes: Number(payload.timeSpentMinutes)
     });
   }
 

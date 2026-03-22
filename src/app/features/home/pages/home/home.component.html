@@ -1,24 +1,113 @@
 <div class="home-page">
-  <mat-card class="home-card">
-    <div class="header">
+  <div class="dashboard-shell">
+    <section class="hero">
       <div>
-        <h1>Home</h1>
-        <p>Bem-vindo, {{ user()?.name || user()?.email || 'usuario' }}.</p>
+        <h1>Welcome back, {{ user()?.name || user()?.email || 'User' }}</h1>
+        <p>{{ subtitle }}</p>
       </div>
-      <button mat-stroked-button type="button" (click)="logout()">Sair</button>
-    </div>
 
-    <div class="stats-card">
-      <span class="label">Cursos disponiveis</span>
-      @if (isLoadingStats) {
-        <mat-progress-spinner mode="indeterminate" diameter="28"></mat-progress-spinner>
-      } @else {
-        <strong>{{ coursesCount }}</strong>
+      <div class="hero-meta">
+        <mat-chip-set>
+          <mat-chip>
+            <mat-icon>badge</mat-icon>
+            {{ role }}
+          </mat-chip>
+        </mat-chip-set>
+        <button mat-stroked-button type="button" (click)="logout()">Sign out</button>
+      </div>
+    </section>
+
+    @if (isLoading) {
+      <mat-card class="loading-card">
+        <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
+        <p>Loading dashboard data...</p>
+      </mat-card>
+    } @else {
+      <section class="stats-grid">
+        @for (item of stats; track item.title) {
+          <mat-card class="stat-card">
+            <div class="stat-icon">
+              <mat-icon>{{ item.icon }}</mat-icon>
+            </div>
+            <div>
+              <span class="stat-label">{{ item.title }}</span>
+              <strong>{{ item.value }}</strong>
+            </div>
+          </mat-card>
+        }
+      </section>
+
+      <mat-card class="progress-card">
+        <div class="progress-header">
+          <h2>Weekly Momentum</h2>
+          <span>{{ progressPercent }}%</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="progressPercent"></mat-progress-bar>
+      </mat-card>
+
+      <section class="main-grid">
+        <mat-card class="actions-card">
+          <h2>Quick Actions</h2>
+          <div class="actions-grid">
+            @for (action of quickActions; track action.label) {
+              <a mat-stroked-button class="action-item" [routerLink]="action.route">
+                <mat-icon>{{ action.icon }}</mat-icon>
+                <div>
+                  <span class="action-label">{{ action.label }}</span>
+                  <small>{{ action.subtitle }}</small>
+                </div>
+              </a>
+            }
+          </div>
+        </mat-card>
+
+        <mat-card class="recent-card">
+          <h2>Recent Activity</h2>
+          @if (recentTasks.length === 0) {
+            <p class="empty">No tasks yet</p>
+          } @else {
+            <ul>
+              @for (task of recentTasks; track task.id) {
+                <li>
+                  <div class="task-meta">
+                    <span>{{ task.date | date:'dd/MM/yyyy' }}</span>
+                    <span>{{ task.category }}</span>
+                  </div>
+                  <p>{{ task.description }}</p>
+                  <strong>{{ task.timeSpent }} min</strong>
+                </li>
+              }
+            </ul>
+          }
+        </mat-card>
+      </section>
+
+      @if (mostRecentTask) {
+        <mat-card class="highlight-card">
+          <h2>Most Recent Task</h2>
+          <p>{{ mostRecentTask.description }}</p>
+          <div class="highlight-meta">
+            <span>{{ mostRecentTask.date | date:'dd/MM/yyyy' }}</span>
+            <span>{{ mostRecentTask.timeSpent }} min</span>
+          </div>
+        </mat-card>
       }
-    </div>
 
-    <div class="actions">
-      <a mat-flat-button color="primary" routerLink="/courses">Ir para cursos</a>
-    </div>
-  </mat-card>
+      <section class="highlights-grid">
+        <h2>Course Highlights</h2>
+        <div class="courses-grid">
+          @for (course of topCourses; track course.id) {
+            <mat-card class="course-card">
+              <h3>{{ course.name }}</h3>
+              <p>{{ course.description }}</p>
+            </mat-card>
+          }
+        </div>
+      </section>
+    }
+
+    @if (hasLoadError) {
+      <p class="empty">Some metrics could not be loaded right now.</p>
+    }
+  </div>
 </div>
