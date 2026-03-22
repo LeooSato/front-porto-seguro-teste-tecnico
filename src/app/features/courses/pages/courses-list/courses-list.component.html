@@ -1,0 +1,45 @@
+<section class="courses-list">
+	<div class="header">
+		<h2>Catalogo de cursos</h2>
+		@if (isAdmin) {
+			<button mat-flat-button color="primary" type="button" (click)="createClick.emit()">Criar curso</button>
+		}
+	</div>
+
+	@if (isLoading) {
+		<div class="state state-loading">
+			<mat-progress-spinner mode="indeterminate" diameter="36"></mat-progress-spinner>
+			<p>Carregando cursos...</p>
+		</div>
+	} @else if (courses.length === 0) {
+		<div class="state state-empty">
+			<p>No courses found</p>
+		</div>
+	} @else {
+		<div class="grid">
+			@for (course of courses; track course.id) {
+				<mat-card class="course-card">
+					<h3>{{ course.name }}</h3>
+					<p>{{ course.description }}</p>
+
+					<div class="actions">
+						@if (isAdmin) {
+							<button mat-stroked-button type="button" (click)="editClick.emit(course)">Editar</button>
+							<button mat-stroked-button type="button" (click)="deleteClick.emit(course)">Excluir</button>
+						} @else {
+							<button
+								mat-flat-button
+								color="primary"
+								type="button"
+								(click)="enrollClick.emit(course)"
+								[disabled]="enrollingCourseId === course.id"
+							>
+								{{ enrollingCourseId === course.id ? 'Matriculando...' : 'Enroll' }}
+							</button>
+						}
+					</div>
+				</mat-card>
+			}
+		</div>
+	}
+</section>

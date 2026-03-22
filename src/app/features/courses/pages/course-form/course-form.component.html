@@ -1,0 +1,29 @@
+<form class="course-form" [formGroup]="form" (ngSubmit)="submit()">
+	<h2>{{ title }}</h2>
+
+	<mat-form-field appearance="outline">
+		<mat-label>Nome</mat-label>
+		<input matInput formControlName="name" maxlength="120" />
+		@if (name.hasError('required') && name.touched) {
+			<mat-error>Nome e obrigatorio.</mat-error>
+		}
+	</mat-form-field>
+
+	<mat-form-field appearance="outline">
+		<mat-label>Descricao</mat-label>
+		<textarea matInput formControlName="description" rows="4" maxlength="500"></textarea>
+		@if (description.hasError('required') && description.touched) {
+			<mat-error>Descricao e obrigatoria.</mat-error>
+		}
+	</mat-form-field>
+
+	<div class="actions">
+		<button mat-stroked-button type="button" (click)="cancel()" [disabled]="isLoading">Cancelar</button>
+		<button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || isLoading">
+			@if (isLoading) {
+				<mat-progress-spinner mode="indeterminate" diameter="18"></mat-progress-spinner>
+			}
+			<span>{{ submitLabel }}</span>
+		</button>
+	</div>
+</form>

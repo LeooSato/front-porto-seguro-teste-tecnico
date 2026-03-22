@@ -1,0 +1,62 @@
+<div class="tasks-page">
+	<div class="tasks-grid">
+		<mat-card class="tasks-card">
+			<div class="topbar">
+				<div>
+					<h1>Task Logging</h1>
+					<p>Registre seu estudo diario.</p>
+				</div>
+			</div>
+
+			@if (isLoading) {
+				<div class="state state-loading">
+					<mat-progress-spinner mode="indeterminate" diameter="36"></mat-progress-spinner>
+					<p>Carregando tarefas...</p>
+				</div>
+			} @else if (tasks.length === 0) {
+				<div class="state state-empty">
+					<p>Nenhuma tarefa registrada.</p>
+				</div>
+			} @else {
+				<div class="table-wrapper">
+					<table class="tasks-table">
+						<thead>
+							<tr>
+								<th>Data</th>
+								<th>Categoria</th>
+								<th>Descricao</th>
+								<th>Tempo</th>
+								<th>Acoes</th>
+							</tr>
+						</thead>
+						<tbody>
+							@for (task of tasks; track trackByTaskId($index, task)) {
+								<tr>
+									<td>{{ task.date }}</td>
+									<td>{{ task.category }}</td>
+									<td>{{ task.description }}</td>
+									<td>{{ task.timeSpent }} min</td>
+									<td class="actions">
+										<button mat-stroked-button type="button" (click)="edit(task)">Editar</button>
+										<button mat-stroked-button type="button" (click)="delete(task)">Excluir</button>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			}
+		</mat-card>
+
+		<mat-card class="form-card">
+			<app-task-form
+				[title]="title"
+				[submitLabel]="submitLabel"
+				[isLoading]="isSaving"
+				[task]="selectedTask"
+				(formSubmit)="saveTask($event)"
+				(formCancel)="cancelEdit()"
+			/>
+		</mat-card>
+	</div>
+</div>

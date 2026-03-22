@@ -1,0 +1,41 @@
+<div class="courses-page">
+  <div class="courses-grid">
+    <mat-card class="courses-card">
+      <div class="topbar">
+        <div>
+          <h1>Cursos</h1>
+          <p>Bem-vindo, {{ user()?.name || user()?.email || 'usuario' }}.</p>
+          <p class="role">Perfil: {{ user()?.role || 'STUDENT' }}</p>
+        </div>
+
+        <div class="topbar-actions">
+          <button mat-stroked-button type="button" (click)="logout()">Sair</button>
+        </div>
+      </div>
+
+      <app-courses-list
+        [courses]="courses"
+        [isLoading]="isLoading"
+        [isAdmin]="isAdmin"
+        [enrollingCourseId]="enrollmentCourseId"
+        (createClick)="openCreate()"
+        (editClick)="edit($event)"
+        (deleteClick)="delete($event)"
+        (enrollClick)="enroll($event)"
+      />
+    </mat-card>
+
+    @if (isAdmin && isFormVisible) {
+      <mat-card class="form-card">
+        <app-course-form
+          [title]="formTitle"
+          [submitLabel]="submitLabel"
+          [isLoading]="isSaving"
+          [course]="selectedCourse"
+          (formSubmit)="saveCourse($event)"
+          (formCancel)="cancelForm()"
+        />
+      </mat-card>
+    }
+  </div>
+</div>

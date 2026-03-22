@@ -1,0 +1,52 @@
+<form class="task-form" [formGroup]="form" (ngSubmit)="submit()">
+	<h2>{{ title }}</h2>
+
+	<mat-form-field appearance="outline">
+		<mat-label>Data</mat-label>
+		<input matInput type="date" formControlName="date" />
+		@if (date.hasError('required') && date.touched) {
+			<mat-error>Data e obrigatoria.</mat-error>
+		}
+	</mat-form-field>
+
+	<mat-form-field appearance="outline">
+		<mat-label>Categoria</mat-label>
+		<mat-select formControlName="category">
+			@for (item of categories; track item) {
+				<mat-option [value]="item">{{ item }}</mat-option>
+			}
+		</mat-select>
+	</mat-form-field>
+
+	<mat-form-field appearance="outline">
+		<mat-label>Descricao</mat-label>
+		<textarea matInput rows="4" maxlength="500" formControlName="description"></textarea>
+		@if (description.hasError('required') && description.touched) {
+			<mat-error>Descricao e obrigatoria.</mat-error>
+		}
+	</mat-form-field>
+
+	<mat-form-field appearance="outline">
+		<mat-label>Tempo gasto (minutos)</mat-label>
+		<input matInput type="number" min="1" step="30" formControlName="timeSpent" />
+		@if (timeSpent.hasError('required') && timeSpent.touched) {
+			<mat-error>Tempo e obrigatorio.</mat-error>
+		}
+		@if (timeSpent.hasError('min') && timeSpent.touched) {
+			<mat-error>Tempo deve ser maior que zero.</mat-error>
+		}
+		@if (timeSpent.hasError('multipleOf30') && timeSpent.touched) {
+			<mat-error>Tempo deve ser multiplo de 30 minutos.</mat-error>
+		}
+	</mat-form-field>
+
+	<div class="actions">
+		<button mat-stroked-button type="button" (click)="cancel()" [disabled]="isLoading">Cancelar</button>
+		<button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || isLoading">
+			@if (isLoading) {
+				<mat-progress-spinner mode="indeterminate" diameter="18"></mat-progress-spinner>
+			}
+			<span>{{ submitLabel }}</span>
+		</button>
+	</div>
+</form>

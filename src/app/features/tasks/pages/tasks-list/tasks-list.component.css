@@ -1,0 +1,93 @@
+.tasks-page {
+	min-height: 100vh;
+	padding: 24px;
+	background:
+		radial-gradient(circle at 14% 12%, #d9eeff 0%, transparent 34%),
+		radial-gradient(circle at 89% 9%, #ffe7cc 0%, transparent 28%),
+		linear-gradient(145deg, #f8fafc, #edf3fb);
+}
+
+.tasks-grid {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	gap: 16px;
+}
+
+.tasks-card,
+.form-card {
+	padding: 24px;
+	border-radius: 16px;
+}
+
+h1 {
+	margin: 0;
+	font-size: 1.9rem;
+}
+
+p {
+	margin-top: 8px;
+}
+
+.state {
+	min-height: 180px;
+	border: 1px dashed #c8d4e5;
+	border-radius: 12px;
+	display: grid;
+	place-items: center;
+	gap: 8px;
+	text-align: center;
+	padding: 16px;
+	color: rgba(0, 0, 0, 0.68);
+}
+
+.table-wrapper {
+	overflow-x: auto;
+}
+
+.tasks-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.tasks-table th,
+.tasks-table td {
+	padding: 10px;
+	border-bottom: 1px solid #e3e8f1;
+	text-align: left;
+	vertical-align: top;
+}
+
+.tasks-table th {
+	color: rgba(0, 0, 0, 0.65);
+	font-weight: 600;
+}
+
+.actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+@media (max-width: 1000px) {
+	.tasks-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 720px) {
+	.tasks-page {
+		padding: 16px;
+	}
+
+	.tasks-card,
+	.form-card {
+		padding: 16px;
+	}
+
+	.actions button {
+		width: 100%;
+	}
+}

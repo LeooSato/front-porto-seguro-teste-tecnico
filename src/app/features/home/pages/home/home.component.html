@@ -1,0 +1,24 @@
+<div class="home-page">
+  <mat-card class="home-card">
+    <div class="header">
+      <div>
+        <h1>Home</h1>
+        <p>Bem-vindo, {{ user()?.name || user()?.email || 'usuario' }}.</p>
+      </div>
+      <button mat-stroked-button type="button" (click)="logout()">Sair</button>
+    </div>
+
+    <div class="stats-card">
+      <span class="label">Cursos disponiveis</span>
+      @if (isLoadingStats) {
+        <mat-progress-spinner mode="indeterminate" diameter="28"></mat-progress-spinner>
+      } @else {
+        <strong>{{ coursesCount }}</strong>
+      }
+    </div>
+
+    <div class="actions">
+      <a mat-flat-button color="primary" routerLink="/courses">Ir para cursos</a>
+    </div>
+  </mat-card>
+</div>
