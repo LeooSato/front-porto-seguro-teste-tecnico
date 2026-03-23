@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -14,6 +14,7 @@ import { TaskFormComponent } from '../task-form/task-form.component';
 @Component({
   selector: 'app-tasks-list',
   imports: [
+    RouterLink,
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,

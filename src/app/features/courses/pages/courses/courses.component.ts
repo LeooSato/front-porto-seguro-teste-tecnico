@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -14,6 +14,7 @@ import { CoursesListComponent } from '../courses-list/courses-list.component';
 @Component({
   selector: 'app-courses',
   imports: [
+    RouterLink,
     MatCardModule,
     MatButtonModule,
     MatSnackBarModule,
